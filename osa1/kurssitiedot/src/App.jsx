@@ -45,29 +45,31 @@ const Total = (props) => {
 
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const parts = [
-    {
-      name: 'Fundamentals of React',
-      exercises: 10
-    },
-    {
-      name: 'Using props to pass data',
-      exercises: 7
-    },
-    {
-      name: 'State of a component',
-      exercises: 14
-    }
-  ]
-  const total_text ='Number of exercises'
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ],
+    total_text: 'Number of exercises'
+}
   
 
   return (
     <div>
-      <Header name={course}/>
-      <Content parts={parts}/>
-      <Total text={total_text} parts={parts}/>
+      <Header name={course.name}/>
+      <Content parts={course.parts}/>
+      <Total text={course.total_text} parts={course.parts}/>
     </div>
   )
 }
