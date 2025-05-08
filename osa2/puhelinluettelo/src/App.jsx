@@ -1,16 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddPerson from "./AddPerson"
 import Filter from './Filter'
 import Persons from './Person'
+import personServices from "./services/persons"
+
+
 
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas",
-      number: "0506654563"
-     }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [newSearch, setNewSearch] = useState("")
@@ -26,6 +25,16 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+
+
+  useEffect(() => {
+    personServices
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
+  }, [])
+
   const addPerson = (event) => {
     event.preventDefault()
     const personObject = {
@@ -36,10 +45,25 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     }
 
-    else {setPersons(persons.concat(personObject))
-    setNewName("")
-    setNewNumber("")}
+    else{
+    
+    personServices
+    .create(personObject)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
+        setNewName("")
+        setNewNumber("")
+        console.log(returnedPerson)
+    })
+    }
+    }
+
+  const deletePerson = (event) => {
+    console.log("deleted")
+    event.preventDefault()
+
   }
+  
 
   return (
     <div>
@@ -54,7 +78,7 @@ const App = () => {
         numberHandler={handleNumberChange}
         />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={newSearch}/>
+      <Persons persons={persons} filter={newSearch} deleter={deletePerson}/>
     </div>
   )
 
