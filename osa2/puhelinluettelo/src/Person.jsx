@@ -13,10 +13,10 @@ const Persons = ({persons,filter,deleter}) => {
     const number=person.number
     if(name.toLowerCase().includes(filter.toLowerCase()) || number.toLowerCase().includes(filter.toLowerCase()) ){return(
       <div>
-        <form onSubmit={deleter}>
+        
           {name} {number}
-          <button type="submit" >Delete</button>
-        </form>
+          <button onClick={()=>deleter(person)} >Delete</button>
+        
         
       </div>
     )}

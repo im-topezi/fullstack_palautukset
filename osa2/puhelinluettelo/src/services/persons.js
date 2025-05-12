@@ -21,6 +21,7 @@ const deleteContact = (id) => {
     return request
 }
 
+
 export default { 
   getAll, 
   create, 
