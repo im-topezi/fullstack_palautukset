@@ -3,6 +3,7 @@ import AddPerson from "./AddPerson"
 import Filter from './Filter'
 import Persons from './Person'
 import personServices from "./services/persons"
+import Notification from './services/Notification'
 
 
 
@@ -13,6 +14,8 @@ const App = () => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [newSearch, setNewSearch] = useState("")
+  const [notificationMessage, setNotificationMessage] =useState("")
+  const [notificationType, setNotificationType] = useState("")
 
   const handleSearchChange = (event) => {
     setNewSearch(event.target.value)
@@ -23,6 +26,17 @@ const App = () => {
   }
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
+  }
+
+  function resetFields() {
+    setNewName("")
+    setNewNumber("")
+  }
+
+  function flashNotification(message,type){
+    setNotificationMessage(message)
+    setNotificationType(type)
+    setTimeout(()=>{setNotificationMessage(null)},5000)
   }
 
 
@@ -48,7 +62,11 @@ const App = () => {
         .update(found.id,personObject)
         .then(updatedPerson =>{ 
           setPersons(persons.map(person => person.id !== found.id ? person : updatedPerson))
-          
+          resetFields()
+          flashNotification(`Updated contact: ${updatedPerson.name}`,"success")
+        })
+        .catch(error =>{
+          flashNotification(`${personObject.name} was already removed from the server`,"error")
         })
 
       }
@@ -60,8 +78,8 @@ const App = () => {
     .create(personObject)
     .then(returnedPerson => {
       setPersons(persons.concat(returnedPerson))
-        setNewName("")
-        setNewNumber("")
+        resetFields()
+        flashNotification(`Added ${returnedPerson.name}`,"success")
         console.log(returnedPerson)
     })
     }
@@ -72,17 +90,23 @@ const App = () => {
           console.log(`deleted ${person.name}`)
     personServices
     .deleteContact(person.id)
-    .then(setPersons(persons.filter(element => element !== person)))
-    }
+    .then(()=>{setPersons(persons.filter(element => element !== person))
+      flashNotification(`Deleted ${person.name} succesfully`,"success")
+    })
+      .catch(error =>{
+          flashNotification(`${person.name} was already removed from the server`,"error")
+    })
 
 
 
   }
+}
   
 
   return (
     <div>
       <h2>Phonebook</h2>
+        <Notification message={notificationMessage} type={notificationType}/>
         <Filter search={newSearch} handler={handleSearchChange}/>
       <h2>Add a new number</h2>
         <AddPerson 
