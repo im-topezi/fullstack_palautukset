@@ -1,9 +1,20 @@
 const express = require("express")
 const app = express()
+const morgan = require("morgan")
 const phonebook = require("./phonebook")
 
 
 app.use(express.json())
+
+morgan.token("postData",
+    function getData(request){
+        if (request.method==="POST"){
+            return JSON.stringify(request.body)
+        }
+    }
+)
+
+app.use(morgan(":method :url :status :res[content-length] - :response-time  :postData"))
 
 app.get("/api/persons", (request,response)=>{
     console.log(request.baseUrl)
@@ -55,7 +66,6 @@ app.post("/api/persons",(request,response)=>{
     }
     phonebook.persons=phonebook.persons.concat(person)
     response.json(person)
-    console.log(phonebook.persons)
 })
 
 
