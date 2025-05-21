@@ -2,9 +2,8 @@ const express = require("express")
 const app = express()
 const morgan = require("morgan")
 const phonebook = require("./phonebook")
-const cors = require('cors')
 
-app.use(cors())
+app.use(express.static('dist'))
 
 app.use(express.json())
 
