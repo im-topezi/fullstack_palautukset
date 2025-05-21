@@ -17,14 +17,21 @@ const Notification = ({ message,type }) => {
   padding: 10,
   marginBottom: 10
     }
-
+  function notificationColor(value){
+    if (value==="success"){
+      return success
+    }
+    else if(value==="error"){
+      return error
+    }
+  }
 
   if (message === null) {
     return null
   }
 
   return (
-    <div style={eval(type)}>
+    <div style={notificationColor(type)}>
       {message}
     </div>
   )
