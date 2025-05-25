@@ -82,7 +82,6 @@ const App = () => {
         flashNotification(`Added ${returnedPerson.name}`,"success")
         console.log(returnedPerson)
     }).catch(error=>{
-      resetFields()
       flashNotification(error.response.data.error,"error")
     })
     }
