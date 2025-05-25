@@ -66,7 +66,7 @@ const App = () => {
           flashNotification(`Updated contact: ${updatedPerson.name}`,"success")
         })
         .catch(error =>{
-          flashNotification(`${personObject.name} was already removed from the server`,"error")
+          flashNotification(error.response.data.error,"error")
         })
 
       }
@@ -81,6 +81,9 @@ const App = () => {
         resetFields()
         flashNotification(`Added ${returnedPerson.name}`,"success")
         console.log(returnedPerson)
+    }).catch(error=>{
+      resetFields()
+      flashNotification(error.response.data.error,"error")
     })
     }
     }
