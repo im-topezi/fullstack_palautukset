@@ -89,6 +89,7 @@ test('Blogs can be modified',async () =>{
     title: "This is a test blog",
     author: "Tester",
     url: "https://nodejs.org/api/test.html",
+    random: "Lol"
   }
   const get_response=await api.get('/api/blogs')
   const blogs_before=get_response.body
@@ -96,8 +97,13 @@ test('Blogs can be modified',async () =>{
   const put_response=await api.put('/api/blogs/'+first_blog_id).send(test_blog)
   const get_after_response=await api.get('/api/blogs')
   const blogs_after=get_after_response.body
-  assert.deepEqual(put_response.body,blogs_after[0])
-  assert.notDeepEqual(blogs_after[0],blogs_before[0])
+  const modifiedBlog=blogs_after[0]
+  assert.deepEqual(put_response.body,modifiedBlog)
+  assert.strictEqual(modifiedBlog.title,test_blog.title)
+  assert.strictEqual(modifiedBlog.author,test_blog.author)
+  assert.strictEqual(modifiedBlog.url,test_blog.url)
+  assert.strictEqual(modifiedBlog.likes,blogs_before[0].likes)
+  assert.strictEqual(Object.hasOwn(modifiedBlog,"random"),false)
 })
 
 
