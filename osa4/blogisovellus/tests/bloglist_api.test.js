@@ -72,6 +72,34 @@ test('Blogs have to have title and a url', async () => {
 
 })
 
+test('Blogs can be deleted', async () => {
+  const get_response=await api.get('/api/blogs')
+  const blogs_before=get_response.body
+  const first_blog_id=blogs_before[0].id
+  const delete_response=await api.delete('/api/blogs/'+first_blog_id)
+  assert.strictEqual(delete_response.statusCode,204)
+  const get_after_delete_response=await api.get('/api/blogs')
+  const blogs_after=get_after_delete_response.body
+  assert.strictEqual(blogs_before.length,blogs_after.length+1)
+
+})
+
+test('Blogs can be modified',async () =>{
+  const test_blog =   {
+    title: "This is a test blog",
+    author: "Tester",
+    url: "https://nodejs.org/api/test.html",
+  }
+  const get_response=await api.get('/api/blogs')
+  const blogs_before=get_response.body
+  const first_blog_id=blogs_before[0].id
+  const put_response=await api.put('/api/blogs/'+first_blog_id).send(test_blog)
+  const get_after_response=await api.get('/api/blogs')
+  const blogs_after=get_after_response.body
+  assert.deepEqual(put_response.body,blogs_after[0])
+  assert.notDeepEqual(blogs_after[0],blogs_before[0])
+})
+
 
 after(async () => {
   await mongoose.connection.close()

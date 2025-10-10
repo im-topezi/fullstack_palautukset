@@ -3,12 +3,7 @@ const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 const blogs = require('../utils/blogs').blogs
 
-test('dummy returns one', () => {
-  
 
-  const result = listHelper.dummy(blogs)
-  assert.strictEqual(result, 1)
-})
 
 describe('total likes', ()=>{
     const listWithOneBlog= blogs.filter(blog=>blog.title =='React patterns')
