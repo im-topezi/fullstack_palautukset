@@ -1,17 +1,13 @@
 const mongoose = require('mongoose')
 
-const validateStringLenght = function (string){
-        return string.lenght>=3
-}   
+
 
 const userSchema = mongoose.Schema({
   username: {
     type:String,
     unique:true,
     required:true,
-    validate:{
-        validator:validateStringLenght,
-        msg:'Username is too short'}},
+    },
   name: String,
   passwordHash: String,
   blogs:[

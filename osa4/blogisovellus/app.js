@@ -5,7 +5,8 @@ const blogsRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const logger = require('./utils/logger')
-const tokenExtractor = require('./utils/tokenExtractor')
+const tokenExtractor = require('./utils/tokenExtractor').getTokenFrom
+const userExtractor = require('./utils/userExtractor').getUserFrom
 
 
 const app = express()
@@ -23,9 +24,9 @@ mongoose
     })
 
 app.use(express.json())
-app.use(tokenExtractor())
+app.use(tokenExtractor)
 app.use('/api/login', loginRouter)
-app.use('/api/blogs', blogsRouter)
+app.use('/api/blogs', userExtractor,blogsRouter)
 app.use('/api/users', userRouter)
 
 module.exports=app
