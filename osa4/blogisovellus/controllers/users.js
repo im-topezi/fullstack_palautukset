@@ -14,14 +14,14 @@ userRouter.post('/',async (request, response) => {
         response.status(400).json({error: 'Password or username is too short'})
     }
     else{
-    const passwordHash=await bcrypt.hash(password,10)
-    const user = new User({
-        username: username,
-        name: name,
-        passwordHash: passwordHash,
-    })
-    const savedUser=await user.save()
-    response.status(201).json(savedUser)
+        const passwordHash=await bcrypt.hash(password,10)
+        const user = new User({
+            username: username,
+            name: name,
+            passwordHash: passwordHash,
+        })
+        const savedUser=await user.save()
+        response.status(201).json(savedUser)
     }
 })
 

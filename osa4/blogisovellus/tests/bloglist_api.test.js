@@ -19,6 +19,12 @@ async function loginAsRoot() {
   return login_response.body
 }
 
+async function loginAsDude() {
+  const login_response=await api.post('/api/login').send(another_user).expect(200)
+  return login_response.body
+}
+
+
 
 async function postBlog(authorization,data) {
   post_response=await api.post('/api/blogs').set('Authorization','Bearer '+authorization).send(data)
@@ -84,7 +90,7 @@ test('Blogs cant be added without login', async () => {
     url: "https://nodejs.org/api/test.html",
     likes: 50000,
     }
-    post_response=await postBlog("",test_blog)
+    post_response=await api.post('/api/blogs').send(test_blog)
     const get_response = await api.get('/api/blogs')
     const blogs_in_db = get_response.body
     assert.strictEqual(blogs_in_db.length,helper.blogs.length)
@@ -134,6 +140,29 @@ test('Blogs can be deleted', async () => {
   assert.strictEqual(blogs_before.length,blogs_after.length+1)
 })
 
+test('Blogs cant be deleted without login', async () => {
+    const get_response=await api.get('/api/blogs')
+    const blogs_before=get_response.body
+    const first_blog_id=blogs_before[0].id
+    const delete_response=await api.delete('/api/blogs/'+first_blog_id)
+    const get_response_after = await api.get('/api/blogs')
+    const blogs_in_db = get_response.body
+    assert.strictEqual(blogs_in_db.length,get_response_after.body.length)
+    assert.strictEqual(delete_response.statusCode,401)
+})
+
+test('Blogs cant be deleted with the wrong login', async () => {
+  const authorization=(await loginAsDude()).token
+  const get_response=await api.get('/api/blogs')
+  const blogs_before=get_response.body
+  const first_blog_id=blogs_before[0].id
+  const delete_response=await api.delete('/api/blogs/'+first_blog_id).set('Authorization','Bearer '+authorization)
+  assert.strictEqual(delete_response.statusCode,401)
+  const get_after_delete_response=await api.get('/api/blogs')
+  const blogs_after=get_after_delete_response.body
+  assert.strictEqual(blogs_before.length,blogs_after.length)
+})
+
 
 test('Blogs can be modified',async () =>{
   const authorization=(await loginAsRoot()).token
@@ -153,6 +182,51 @@ test('Blogs can be modified',async () =>{
   assert.strictEqual(modifiedBlog.title,test_blog.title)
   assert.strictEqual(modifiedBlog.author,test_blog.author)
   assert.strictEqual(modifiedBlog.url,test_blog.url)
+  assert.strictEqual(modifiedBlog.likes,blogs_before[0].likes)
+  assert.strictEqual(Object.hasOwn(modifiedBlog,"random"),false)
+})
+
+test('Blogs cant be modified without a login',async () =>{
+  const test_blog =   {
+    title: "This is a test blog",
+    author: "Tester",
+    url: "https://nodejs.org/api/test.html",
+    random: "Lol"
+  }
+  const get_response=await api.get('/api/blogs')
+  const blogs_before=get_response.body
+  const first_blog_id=blogs_before[0].id
+  const put_response=await api.put('/api/blogs/'+first_blog_id).send(test_blog)
+  const get_after_response=await api.get('/api/blogs')
+  const blogs_after=get_after_response.body
+  const modifiedBlog=blogs_after[0]
+  assert.strictEqual(put_response.statusCode,401)
+  assert.notStrictEqual(modifiedBlog.title,test_blog.title)
+  assert.notStrictEqual(modifiedBlog.author,test_blog.author)
+  assert.notStrictEqual(modifiedBlog.url,test_blog.url)
+  assert.strictEqual(modifiedBlog.likes,blogs_before[0].likes)
+  assert.strictEqual(Object.hasOwn(modifiedBlog,"random"),false)
+})
+
+test('Blogs cant be modified with a wrong login',async () =>{
+  const authorization=(await loginAsDude()).token
+  const test_blog =   {
+    title: "This is a test blog",
+    author: "Tester",
+    url: "https://nodejs.org/api/test.html",
+    random: "Lol"
+  }
+  const get_response=await api.get('/api/blogs')
+  const blogs_before=get_response.body
+  const first_blog_id=blogs_before[0].id
+  const put_response=await api.put('/api/blogs/'+first_blog_id).send(test_blog).set('Authorization','Bearer '+authorization)
+  const get_after_response=await api.get('/api/blogs')
+  const blogs_after=get_after_response.body
+  const modifiedBlog=blogs_after[0]
+  assert.strictEqual(put_response.statusCode,401)
+  assert.notStrictEqual(modifiedBlog.title,test_blog.title)
+  assert.notStrictEqual(modifiedBlog.author,test_blog.author)
+  assert.notStrictEqual(modifiedBlog.url,test_blog.url)
   assert.strictEqual(modifiedBlog.likes,blogs_before[0].likes)
   assert.strictEqual(Object.hasOwn(modifiedBlog,"random"),false)
 })

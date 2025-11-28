@@ -12,6 +12,7 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/',async (request, response) => {
   const body = request.body
   user=request.user
+  
   if (!(body.title || body.url)){
     return response.status(400).json(request)
   }
