@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
     participant browser
     participant server
@@ -8,3 +9,4 @@ sequenceDiagram
     deactivate server
         
     Note right of browser: Note is sent to the server, but page isn't reloaded. The value is instead appended to the existing notes on the browser using javascript.
+```
