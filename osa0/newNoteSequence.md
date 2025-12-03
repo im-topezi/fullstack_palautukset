@@ -30,4 +30,4 @@ sequenceDiagram
     deactivate server    
 
     Note right of browser: The browser executes the callback function that renders the notes and including the note that we just added with the post request
-´´´
+```
