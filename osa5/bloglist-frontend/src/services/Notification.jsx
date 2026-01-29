@@ -1,27 +1,27 @@
 const Notification = ({ message,type }) => {
   const  error ={
-  color: "red",
-  background: "lightgrey",
-  fontSize: 20,
-  borderStyle: "solid",
-  borderRadius: 5,
-  padding: 10,
-  marginBottom: 10
-    }
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
   const  success ={
-  color: "green",
-  background: "lightgrey",
-  fontSize: 20,
-  borderStyle: "solid",
-  borderRadius: 5,
-  padding: 10,
-  marginBottom: 10
-    }
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
   function notificationColor(value){
-    if (value==="success"){
+    if (value==='success'){
       return success
     }
-    else if(value==="error"){
+    else if(value==='error'){
       return error
     }
   }
