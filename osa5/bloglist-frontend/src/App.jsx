@@ -80,6 +80,7 @@ const App = () => {
     try{
       const response = await blogService.create(blogObject)
       setBlogs(blogs.concat(response))
+      console.log(response)
       blogFormRef.current.toggleVisibility()
       resetFieldsRef.current.resetFields()
       flashNotification(`a new blog ${response.title} by ${response.author} added succesfully`,'success')

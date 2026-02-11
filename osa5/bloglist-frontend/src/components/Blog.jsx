@@ -30,7 +30,7 @@ const Blog = ({ blog, addLike, sendDelete, user }) => {
   }
 
   const deleteBlog = () => {
-    const confirm_message=`Remove blog ${blog.name} by ${blog.author}?`
+    const confirm_message=`Remove blog ${blog.title} by ${blog.author}?`
     if (window.confirm(confirm_message)){
       sendDelete({
         id: blog.id,
@@ -48,7 +48,7 @@ const Blog = ({ blog, addLike, sendDelete, user }) => {
         </div>
         <div style={showWhenVisible}>
           <button onClick={() => setAdditionalVisible(false)}>hide</button>
-          <div>Title: <b>{blog.title} </b> </div><div> Author: <b>{blog.author} </b> </div><div>URL: <b>{blog.url} </b></div><div> Likes: <b>{likes} </b> <button onClick={likeBlog}>like</button> </div>
+          <div>Title: <b>{blog.title} </b> </div><div> Author: <b>{blog.author} </b> </div><div>URL: <b>{blog.url} </b></div><div> Likes: <b data-testid='likes'>{likes} </b> <button onClick={likeBlog}>like</button> </div>
           {user.username === blog.user.username &&(<div>
             <button onClick={deleteBlog}>delete</button> </div>)}
         </div>
