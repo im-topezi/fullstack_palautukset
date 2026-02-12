@@ -90,6 +90,7 @@ describe('Blog app', () => {
                 expect(page.getByRole('button',{name:'delete'})).not.toBeVisible()
             })
             test('blogs are ordered by likes', async ({page})=>{
+                let likes=[]
                 await page.getByRole('button',{name:'like'}).click()
                 await page.getByRole('button',{name:'like'}).click()
                 await page.getByRole('button',{name:'hide'}).click()
@@ -112,9 +113,14 @@ describe('Blog app', () => {
                 await page.getByRole('button',{name:'view'}).first().click()
                 await page.getByRole('button',{name:'view'}).first().click()
                 await page.getByRole('button',{name:'view'}).first().click()
-                const likes = await page.getByTestId('likes').all()
+                const likes_locators = await page.getByTestId('likes').all()
+                for (const like of await likes_locators){
+                    
+                    likes.push(parseInt(await like.textContent()))
+                }
                 expect(likes[0]).toBeGreaterThan(likes[1])
                 expect(likes[1]).toBeGreaterThan(likes[2])
+
             })
         })
     })
